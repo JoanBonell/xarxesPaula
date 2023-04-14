@@ -49,6 +49,7 @@ public class ChatClient {
                     if (message.equals("FI")) {
                         System.out.println("Connexió tancada.");
                         socket.close();
+                        inputThread.interrupt();
                         break;
                     }
                 }

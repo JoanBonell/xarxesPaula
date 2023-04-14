@@ -25,7 +25,7 @@ public class ChatServer {
                 @Override
                 public void run() {
                     try {
-                        while (true) {
+                        while (!Thread.interrupted()) {
                             String message = reader.readLine();
                             if (!message.isEmpty()) {
                                 outStream.writeUTF(message);
@@ -45,7 +45,7 @@ public class ChatServer {
 
             inputThread.start();
 
-            while (true) {
+            while (!Thread.interrupted()) {
                 String message = inStream.readUTF();
                 if (!message.isEmpty()) {
                     System.out.println("Client: \"" + message + "\"");
