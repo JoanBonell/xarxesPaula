@@ -13,7 +13,6 @@ public class ChatClient {
             Socket socket = new Socket("localhost", 1234);
             System.out.println("Connexió establerta.");
 
-            //creem el socket i li passem el nom del host i el port
             DataInputStream inStream = new DataInputStream(socket.getInputStream());
             DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -23,12 +22,13 @@ public class ChatClient {
                 public void run() {
                     while (!Thread.interrupted()) {
                         try {
-                            //aqui li passem el missatge que volem enviar
                             String message = reader.readLine();
                             if (!message.isEmpty()) {
                                 outStream.writeUTF(message);
                                 outStream.flush();
                                 if (message.equals("FI")) {
+                                    System.out.println("Connexió tancada.");
+                                    socket.close();
                                     break;
                                 }
                             }
@@ -37,27 +37,23 @@ public class ChatClient {
                             break;
                         }
                     }
-                    try {
-                        socket.close();
-                        System.out.println("Client finalitzat.");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             });
+
             inputThread.start();
 
             while (true) {
-                //aqui li llegim el missatge que ens envia el servidor
                 String message = inStream.readUTF();
                 if (!message.isEmpty()) {
                     System.out.println("Servidor: \"" + message + "\"");
                     if (message.equals("FI")) {
+                        System.out.println("Connexió tancada.");
+                        socket.close();
                         break;
                     }
                 }
             }
-            //tanquem el socket
+
             inputThread.interrupt();
 
         } catch (IOException e) {
