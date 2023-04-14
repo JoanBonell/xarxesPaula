@@ -5,8 +5,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+/**
+ * Aquesta classe implementa un client de xat que es connecta a un servidor de xat
+ * mitjançant un socket. El programa permet que l'usuari envii missatges al servidor
+ * i també rep missatges del servidor.
+ */
 public class ChatClient {
 
+    /**
+     * Aquesta funció principal és l'entrada del programa. Crea un socket per connectar-se
+     * al servidor de xat i configura els fluxos d'entrada i sortida del socket.
+     * També crea un fil per llegir les dades d'entrada del socket i un altre fil per
+     * llegir les dades d'entrada del teclat de l'usuari.
+     *
+     * @param args els arguments de la línia de comandes (no s'utilitzen en aquest programa)
+     * @throws IOException si hi ha problemes de connexió o de fluxos d'entrada/sortida
+     */
     public static void main(String[] args) throws IOException {
 
         try {
@@ -17,6 +31,7 @@ public class ChatClient {
             DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
+            // Fil per llegir les dades d'entrada del socket
             Thread inputThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -42,6 +57,7 @@ public class ChatClient {
 
             inputThread.start();
 
+            // Bucle per llegir les dades d'entrada del socket
             while (true) {
                 String message = inStream.readUTF();
                 if (!message.isEmpty()) {
